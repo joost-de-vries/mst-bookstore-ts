@@ -1,5 +1,5 @@
-import React from "react"
-import ReactDOM from "react-dom"
+import * as React from "react"
+import * as ReactDOM from "react-dom"
 import { Provider } from "mobx-react"
 import { observable, reaction } from "mobx"
 import {
@@ -50,7 +50,7 @@ ReactDOM.render(
 reaction(
     () => shop.view.currentUrl,
     path => {
-        if (window.location.pathname !== path) window.history.pushState(null, null, path)
+        if (window.location.pathname !== path) window.history.pushState(null, null!, path)
     }
 )
 
@@ -64,11 +64,11 @@ window.onpopstate = function historyChange(ev) {
     if (ev.type === "popstate") router(window.location.pathname)
 }
 
-router(window.location.pathname)
+router.apply(window.location.pathname)
 
 // ---------------
 
-window.shop = shop // for playing around with the console
+(window as any).shop = shop // for playing around with the console
 
 /**
  * Poor man's effort of "DevTools" to demonstrate the api:

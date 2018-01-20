@@ -30,7 +30,7 @@ export const BookStore = types
             self.books.values().forEach(book => (book.isAvailable = false))
             json.forEach(bookJson => {
                 self.books.put(bookJson)
-                self.books.get(bookJson.id).isAvailable = true
+                self.books.get(bookJson.id)!.isAvailable = true
             })
         }
 
