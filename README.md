@@ -1,4 +1,5 @@
 # Typescript Bookshop example
+This is a port of the [bookshop example](https://github.com/mobxjs/mobx-state-tree/tree/master/packages/mst-example-bookshop) of Mobx State Tree to Typescript
 
 ## Features
 
