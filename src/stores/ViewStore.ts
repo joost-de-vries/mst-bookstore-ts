@@ -9,12 +9,12 @@ export const ViewStore = types
     .views(self => ({
         get shop() {
             return getParent(self)
+        },
+        get isLoading() {
+            return getParent(self).isLoading
         }
     }))
     .views(self => ({
-        get isLoading() {
-            return self.shop.isLoading
-        },
         get currentUrl() {
             switch (self.page) {
                 case "books":
@@ -28,7 +28,7 @@ export const ViewStore = types
             }
         },
         get selectedBook() {
-            return (self as any).isLoading || !self.selectedBookId
+            return self.isLoading || !self.selectedBookId
                 ? null
                 : self.shop.books.get(self.selectedBookId)
         }
@@ -40,7 +40,7 @@ export const ViewStore = types
         },
         openBookPage(book: typeof Book.Type) {
             self.page = "book"
-            self.selectedBookId = book.id as string // fix this
+            self.selectedBookId = book.id as string// fix this
         },
         openBookPageById(id: typeof Book.Type.id) {
             self.page = "book"
