@@ -4,7 +4,7 @@ import { ShopStore } from "./ShopStore"
 
 const testEnvironment = {
     fetch: () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json", "utf-8"))),
-    alert: m => console.log(m)
+    alert: (m: any) => console.log(m)
 }
 
 const testBook = {
