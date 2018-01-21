@@ -68,7 +68,7 @@ window.onpopstate = function historyChange(ev: PopStateEvent) {
     if (ev.type === "popstate") router(window.location.pathname)
 }
 
-router("window.location.pathname");
+router(window.location.pathname);
 
 // ---------------
 

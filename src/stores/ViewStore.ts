@@ -40,7 +40,7 @@ export const ViewStore = types
         },
         openBookPage(book: typeof Book.Type) {
             self.page = "book"
-            self.selectedBookId = book.id as string// fix this
+            self.selectedBookId = book.id as string // fix this
         },
         openBookPageById(id: typeof Book.Type.id) {
             self.page = "book"
