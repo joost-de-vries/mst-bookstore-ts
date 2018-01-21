@@ -1,7 +1,7 @@
 import { types, getParent, flow } from "mobx-state-tree"
 
 export const Book = types.model("Book", {
-    id: types.identifier(),
+    id: types.identifier(types.string),
     name: types.string,
     author: types.string,
     price: types.number,
