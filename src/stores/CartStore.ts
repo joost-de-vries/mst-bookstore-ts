@@ -88,14 +88,11 @@ export const CartStore = types
             }
             entry.increaseQuantity(quantity)
             if (notify) self.shop.alert("Added to cart")
+            self.shop.view.openCartPage()
         },
         checkout() {
             const total = self.total;
             self.clear()
             self.shop.alert(`Bought books for ${total} € !`)
-        },
-        readFromLocalStorage() {
-            const cartData = window.localStorage.getItem("cart")
-            if (cartData) applySnapshot(self, JSON.parse(cartData))
         }
     }))
