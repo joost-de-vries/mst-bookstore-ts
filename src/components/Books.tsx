@@ -1,16 +1,6 @@
 import * as React from "react"
 import { observer, inject } from "mobx-react"
-
-const Books = inject("shop")(
-    observer(({ shop }) => (
-        <section className="Page-books">
-            <h1>Available books</h1>
-            <ol>
-                {shop.sortedAvailableBooks.map(book => <BookEntry key={book.id} book={book} />)}
-            </ol>
-        </section>
-    ))
-)
+import { Book } from "../stores/BookStore"
 
 const BookEntry = inject("shop")(
     observer(({ book, shop }) => (
@@ -26,6 +16,17 @@ const BookEntry = inject("shop")(
                 {book.name}
             </a>
         </li>
+    ))
+)
+
+const Books = inject("shop")(
+    observer(({ shop }) => (
+        <section className="Page-books">
+            <h1>Available books</h1>
+            <ol>
+                {shop.sortedAvailableBooks.map((book: typeof Book.Type) => <BookEntry key={book.id} book={book} />)}
+            </ol>
+        </section>
     ))
 )
 

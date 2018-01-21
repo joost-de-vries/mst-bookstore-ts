@@ -7,25 +7,9 @@ import Books from "./Books"
 import BookDetails from "./BookDetails"
 import Cart from "./Cart"
 import DevTools from "./DevTools"
+import { ViewStore } from "../stores/ViewStore";
 
-const App = inject("shop")(
-    observer(({ shop }) => (
-        <div>
-            <div className="App">
-                <AppHeader />
-                <AppMenu>
-                    <AppMenuItem onClick={() => shop.view.openBooksPage()}>
-                        Available books
-                    </AppMenuItem>
-                    <AppMenuItem onClick={() => shop.view.openCartPage()}>Your cart</AppMenuItem>
-                </AppMenu>
-                {shop.isLoading ? <h1>Loading...</h1> : renderPage(shop.view)}
-            </div>
-        </div>
-    ))
-)
-
-function renderPage(viewStore) {
+function renderPage(viewStore: typeof ViewStore.Type) {
     switch (viewStore.page) {
         case "books":
             return <Books />
@@ -46,13 +30,31 @@ const AppHeader = () => (
         <h2>Welcome to the React MobX Book shop!</h2>
     </div>
 )
-
-const AppMenu = ({ children }) => <ul className="App-menu">{children}</ul>
-
-const AppMenuItem = ({ onClick, children }) => (
+type HasChildren = { children: React.ReactNode}
+const AppMenu = ({ children }: HasChildren) => <ul className="App-menu">{children}</ul>
+type HasOnClick = {onClick: React.MouseEventHandler<HTMLAnchorElement>}
+const AppMenuItem = ({ onClick, children }: HasChildren & HasOnClick) => (
     <li>
         <a onClick={onClick}>{children}</a>
     </li>
+)
+
+const App = inject("shop", "history")(
+    observer(({ shop, history }) => (
+        <div>
+            <div className="App">
+                <AppHeader />
+                <AppMenu>
+                    <AppMenuItem onClick={() => shop.view.openBooksPage()}>
+                        Available books
+                    </AppMenuItem>
+                    <AppMenuItem onClick={() => shop.view.openCartPage()}>Your cart</AppMenuItem>
+                </AppMenu>
+                {shop.isLoading ? <h1>Loading...</h1> : renderPage(shop.view)}
+            </div>
+            <DevTools history={history}/>
+        </div>
+    ))
 )
 
 export default App

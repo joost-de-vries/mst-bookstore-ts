@@ -2,7 +2,7 @@ import { when, reaction } from "mobx"
 import { types, getParent, getSnapshot, applySnapshot } from "mobx-state-tree"
 import { Book } from "./BookStore"
 
-const CartEntry = types
+export const CartEntry = types
     .model("CartEntry", {
         quantity: 0,
         book: types.reference(Book)
@@ -16,10 +16,10 @@ const CartEntry = types
         }
     }))
     .actions(self => ({
-        increaseQuantity(amount) {
+        increaseQuantity(amount: number) {
             self.quantity += amount
         },
-        setQuantity(amount) {
+        setQuantity(amount: number) {
             self.quantity = amount
         }
     }))
@@ -29,20 +29,22 @@ export const CartStore = types
         entries: types.array(CartEntry)
     })
     .views(self => ({
-        get shop() {
-            return getParent(self)
-        },
         get subTotal() {
             return self.entries.reduce((sum, e) => sum + e.price, 0)
+        }
+    }))
+    .views(self => ({
+        get shop() {
+            return getParent(self)
         },
         get hasDiscount() {
             return self.subTotal >= 100
         },
         get discount() {
-            return self.subTotal * (self.hasDiscount ? 0.1 : 0)
+            return self.subTotal * ((self as any).hasDiscount ? 0.1 : 0)
         },
-        get total() {
-            return self.subTotal - self.discount
+        get total(): number {
+            return self.subTotal - (self as any).discount
         },
         get canCheckout() {
             return (
@@ -57,7 +59,7 @@ export const CartStore = types
                 when(
                     () => !self.shop.isLoading,
                     () => {
-                        self.readFromLocalStorage()
+                        (self as any).readFromLocalStorage()
                         reaction(
                             () => getSnapshot(self),
                             json => {
@@ -68,18 +70,19 @@ export const CartStore = types
                 )
             }
         },
-        addBook(book, quantity = 1, notify = true) {
-            let entry = self.entries.find(entry => entry.book === book)
+        addBook(book: typeof Book.Type, quantity: number = 1, notify: boolean = true) {
+            let entry = self.entries.find(ent => ent.book === book)
             if (!entry) {
-                self.entries.push({ book: book })
+                const newEntry = CartEntry.create({ book: book, quantity: quantity })
+                self.entries.push(newEntry)
                 entry = self.entries[self.entries.length - 1]
             }
             entry.increaseQuantity(quantity)
             if (notify) self.shop.alert("Added to cart")
         },
         checkout() {
-            const total = self.total
-            self.clear()
+            const total = self.total;
+            (self as any).clear()
             self.shop.alert(`Bought books for ${total} € !`)
         },
         clear() {

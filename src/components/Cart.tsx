@@ -1,29 +1,9 @@
 import * as React from "react"
 import { observer, inject } from "mobx-react"
 import "./Cart.css"
-
-const Cart = inject("shop")(
-    observer(({ shop: { cart } }) => (
-        <section className="Page-cart">
-            <h2>Your cart</h2>
-            <section className="Page-cart-items">
-                {cart.entries.map(entry => <CartEntry key={entry.book.id} entry={entry} />)}
-            </section>
-            <p>Subtotal: {cart.subTotal} €</p>
-            {cart.hasDiscount && (
-                <p>
-                    <i>Large order discount: {cart.discount} €</i>
-                </p>
-            )}
-            <p>
-                <b>Total: {cart.total} €</b>
-            </p>
-            <button disabled={!cart.canCheckout} onClick={() => cart.checkout()}>
-                Submit order
-            </button>
-        </section>
-    ))
-)
+import { CartEntry as CE } from "../stores/CartStore"
+import { ShopStore } from "../stores/ShopStore"
+import { ChangeEvent } from "react";
 
 const CartEntry = inject("shop")(
     observer(({ shop, entry }) => (
@@ -52,14 +32,39 @@ const CartEntry = inject("shop")(
     ))
 )
 
-function onEntryClick(shop, e) {
+function onEntryClick(shop: typeof ShopStore.Type, e: MouseEvent) {
     shop.view.openBookPage(this.book)
     e.preventDefault()
     return false
 }
 
-function updateEntryQuantity(entry, e) {
+function updateEntryQuantity(entry: typeof CE.Type, e: ChangeEvent<HTMLInputElement>) {
     if (e.target.value) entry.setQuantity(parseInt(e.target.value, 10))
 }
+
+type InjectedShop = { shop: typeof ShopStore.Type}
+
+const Cart = inject("shop")(
+    observer(({ shop: { cart } }) => (
+        <section className="Page-cart">
+            <h2>Your cart</h2>
+            <section className="Page-cart-items">
+                {cart.entries.map((entry: typeof CE.Type) => <CartEntry key={entry.book.id} entry={entry} />)}
+            </section>
+            <p>Subtotal: {cart.subTotal} €</p>
+            {cart.hasDiscount && (
+                <p>
+                    <i>Large order discount: {cart.discount} €</i>
+                </p>
+            )}
+            <p>
+                <b>Total: {cart.total} €</b>
+            </p>
+            <button disabled={!cart.canCheckout} onClick={() => cart.checkout()}>
+                Submit order
+            </button>
+        </section>
+    ))
+)
 
 export default Cart

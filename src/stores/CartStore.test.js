@@ -3,7 +3,7 @@ import { when } from "mobx"
 import { ShopStore } from "./ShopStore"
 
 const testEnvironment = {
-    fetch: () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json"))),
+    fetch: () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json","uft-8"))),
     alert: m => console.log(m)
 }
 

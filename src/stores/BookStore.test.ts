@@ -2,7 +2,7 @@ import * as fs from "fs"
 import { when } from "mobx"
 import { ShopStore } from "./ShopStore"
 
-const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json","UTF-8")))
+const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json", "UTF-8")))
 
 it("bookstore fetches data", done => {
     const store = ShopStore.create({}, { fetch: bookFetcher })

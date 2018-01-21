@@ -2,7 +2,7 @@ import * as fs from "fs"
 import { when } from "mobx"
 import { ShopStore } from "./ShopStore"
 
-const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json")))
+const bookFetcher = () => Promise.resolve(JSON.parse(fs.readFileSync("./public/books.json", "UTF-8")))
 
 it("as a user I can buy books", done => {
     const alertSpy = jasmine.createSpy("alert")

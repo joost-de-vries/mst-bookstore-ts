@@ -22,19 +22,19 @@ export const BookStore = types
         }
     }))
     .actions(self => {
-        function markLoading(loading) {
+        function markLoading(loading: boolean) {
             self.isLoading = loading
         }
 
-        function updateBooks(json) {
+        function updateBooks(json: any) {
             self.books.values().forEach(book => (book.isAvailable = false))
-            json.forEach(bookJson => {
+            json.forEach((bookJson: any) => {
                 self.books.put(bookJson)
                 self.books.get(bookJson.id)!.isAvailable = true
             })
         }
 
-        const loadBooks = flow(function* loadBooks() {
+        const loadBooks = flow(function* loadBooksGenerator() {
             try {
                 const json = yield self.shop.fetch("/books.json")
                 updateBooks(json)
@@ -50,7 +50,7 @@ export const BookStore = types
         }
     })
 
-function sortBooks(books) {
+function sortBooks(books: typeof Book.Type[]) {
     return books
         .filter(b => b.isAvailable)
         .sort((a, b) => (a.name > b.name ? 1 : a.name === b.name ? 0 : -1))

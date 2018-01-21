@@ -4,8 +4,17 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs"
 
 import "./DevTools.css"
 import "react-tabs/style/react-tabs.css"
+import { AppHistory } from "../index"
 
-const DevTools = ({ history }) =>
+const HistoryEntry = ({ entry }: {entry: any}) => (
+    <pre className="history-entry" onClick={() => entry.replay()}>
+        {JSON.stringify(entry.data, null, 2)}
+    </pre>
+)
+
+type InjectedHistory = { history: AppHistory}
+
+const DevTools = ({ history }: InjectedHistory) =>
     history ? (
         <div className="devtools">
             <Tabs>
@@ -29,10 +38,4 @@ const DevTools = ({ history }) =>
         </div>
     ) : null
 
-const HistoryEntry = ({ entry }) => (
-    <pre className="history-entry" onClick={() => entry.replay()}>
-        {JSON.stringify(entry.data, null, 2)}
-    </pre>
-)
-
-export default inject("history")(observer(DevTools))
+    export default inject("history")(observer(DevTools))

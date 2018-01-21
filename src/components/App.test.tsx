@@ -8,7 +8,7 @@ import * as fs from "fs"
 import { ShopStore } from "../stores/ShopStore"
 
 const bookFetcher = () => Promise.resolve(JSON.parse(
-    fs.readFileSync("./public/books.json",{encoding:"utf-8"})
+    fs.readFileSync("./public/books.json", { encoding: "utf-8" })
 ))
 
 it("matches snapshot before and after loading", done => {
@@ -23,8 +23,8 @@ it("matches snapshot before and after loading", done => {
     expect(tree).toMatchSnapshot()
 
     setTimeout(() => {
-        let tree = app.toJSON()
-        expect(tree).toMatchSnapshot()
+        let atree = app.toJSON()
+        expect(atree).toMatchSnapshot()
         done()
     }, 100)
 })

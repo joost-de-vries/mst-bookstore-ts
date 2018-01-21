@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { Provider } from "mobx-react"
-import { observable, reaction } from "mobx"
+import { observable, reaction, IObservableArray } from "mobx"
 import {
     onSnapshot,
     onAction,
@@ -18,16 +18,20 @@ import "./index.css"
 
 import { ShopStore } from "./stores/ShopStore"
 
-const fetcher = url => window.fetch(url).then(response => response.json())
+const fetcher = (url: RequestInfo) => window.fetch(url).then(response => response.json())
 const shop = ShopStore.create(
     {},
     {
         fetch: fetcher,
-        alert: m => console.log(m) // Noop for demo: window.alert(m)
+        alert: (m: any) => console.log(m) // Noop for demo: window.alert(m)
     }
 )
-
-const history = {
+export type AppHistory = {
+    snapshots: IObservableArray<{}>
+    actions: IObservableArray<{}>
+    patches: IObservableArray<{}>
+}
+const history: AppHistory = {
     snapshots: observable.shallowArray(),
     actions: observable.shallowArray(),
     patches: observable.shallowArray()
@@ -54,17 +58,17 @@ reaction(
     }
 )
 
-const router = createRouter({
+const router: (path: string) => boolean = createRouter({
     "/book/:bookId": ({ bookId }) => shop.view.openBookPageById(bookId),
     "/cart": shop.view.openCartPage,
     "/": shop.view.openBooksPage
 })
 
-window.onpopstate = function historyChange(ev) {
+window.onpopstate = function historyChange(ev: PopStateEvent) {
     if (ev.type === "popstate") router(window.location.pathname)
 }
 
-router.apply(window.location.pathname)
+router("window.location.pathname");
 
 // ---------------
 

@@ -14,8 +14,8 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": false,
-    "noImplicitAny": false,
-    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true
 //    "noUnusedLocals": true
   },

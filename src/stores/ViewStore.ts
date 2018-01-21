@@ -1,4 +1,5 @@
 import { types, getParent } from "mobx-state-tree"
+import { Book } from "../stores/BookStore"
 
 export const ViewStore = types
     .model({
@@ -8,7 +9,9 @@ export const ViewStore = types
     .views(self => ({
         get shop() {
             return getParent(self)
-        },
+        }
+    }))
+    .views(self => ({
         get isLoading() {
             return self.shop.isLoading
         },
@@ -25,7 +28,7 @@ export const ViewStore = types
             }
         },
         get selectedBook() {
-            return self.isLoading || !self.selectedBookId
+            return (self as any).isLoading || !self.selectedBookId
                 ? null
                 : self.shop.books.get(self.selectedBookId)
         }
@@ -35,13 +38,13 @@ export const ViewStore = types
             self.page = "books"
             self.selectedBookId = ""
         },
-        openBookPage(book) {
+        openBookPage(book: typeof Book.Type) {
             self.page = "book"
-            self.selectedBookId = book.id
+            self.selectedBookId = book.id as string // fix this
         },
-        openBookPageById(id) {
+        openBookPageById(id: typeof Book.Type.id) {
             self.page = "book"
-            self.selectedBookId = id
+            self.selectedBookId = id as string // fix this
         },
         openCartPage() {
             self.page = "cart"
