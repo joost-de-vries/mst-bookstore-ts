@@ -58,7 +58,7 @@ reaction(
     }
 )
 
-const router: (path: string) => boolean = createRouter({
+const router = createRouter({
     "/book/:bookId": ({ bookId }) => shop.view.openBookPageById(bookId),
     "/cart": shop.view.openCartPage,
     "/": shop.view.openBooksPage
