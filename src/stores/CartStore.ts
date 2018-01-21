@@ -54,12 +54,21 @@ export const CartStore = types
         }
     }))
     .actions(self => ({
+        clear() {
+            self.entries.clear()
+        },
+        readFromLocalStorage() {
+            const cartData = window.localStorage.getItem("cart")
+            if (cartData) applySnapshot(self, JSON.parse(cartData))
+        }
+    }))
+    .actions(self => ({
         afterAttach() {
             if (typeof window !== "undefined" && window.localStorage) {
                 when(
                     () => !self.shop.isLoading,
                     () => {
-                        (self as any).readFromLocalStorage()
+                        self.readFromLocalStorage()
                         reaction(
                             () => getSnapshot(self),
                             json => {
@@ -73,7 +82,7 @@ export const CartStore = types
         addBook(book: typeof Book.Type, quantity: number = 1, notify: boolean = true) {
             let entry = self.entries.find(ent => ent.book === book)
             if (!entry) {
-                const newEntry = CartEntry.create({ book: book, quantity: quantity })
+                const newEntry = CartEntry.create({ book: book, quantity: 0 })
                 self.entries.push(newEntry)
                 entry = self.entries[self.entries.length - 1]
             }
@@ -82,11 +91,8 @@ export const CartStore = types
         },
         checkout() {
             const total = self.total;
-            (self as any).clear()
+            self.clear()
             self.shop.alert(`Bought books for ${total} € !`)
-        },
-        clear() {
-            self.entries.clear()
         },
         readFromLocalStorage() {
             const cartData = window.localStorage.getItem("cart")
