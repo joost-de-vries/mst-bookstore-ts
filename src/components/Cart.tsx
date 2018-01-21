@@ -32,7 +32,7 @@ const CartEntry = inject("shop")(
     ))
 )
 
-function onEntryClick(shop: typeof ShopStore.Type, e: MouseEvent) {
+function onEntryClick(this: typeof CE.Type, shop: typeof ShopStore.Type, e: MouseEvent) {
     shop.view.openBookPage(this.book)
     e.preventDefault()
     return false

@@ -88,7 +88,7 @@ onSnapshot(
             data: s,
             replay() {
                 recording = false
-                applySnapshot(shop, this.data)
+                applySnapshot(shop, s)
                 recording = true
             }
         })
@@ -101,7 +101,7 @@ onPatch(
             data: s,
             replay() {
                 recording = false
-                applyPatch(shop, this.data)
+                applyPatch(shop, s)
                 recording = true
             }
         })
@@ -114,19 +114,20 @@ onAction(
             data: s,
             replay() {
                 recording = false
-                applyAction(shop, this.data)
+                applyAction(shop, s)
                 recording = true
             }
         })
 )
 
 // add initial snapshot
+const initial = getSnapshot(shop)
 history.snapshots.push({
-    data: getSnapshot(shop),
+    data: initial,
     replay() {
         // TODO: DRY
         recording = false
-        applySnapshot(shop, this.data)
+        applySnapshot(shop, initial)
         recording = true
     }
 })
